@@ -1,12 +1,22 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using MVCExample.Web.Features.Base;
 
 namespace MVCExample.Web.Features.Blog;
 
+[Table("Tbl_Blog")]
 public class BlogDataModel : BaseDataModel
 {
     [Key]
-    public int Blog_Id { get; set; }
-    public string Blog_Title { get; set; }
-    public string Blog_Author { get; set; }
-    public string Blog_Content { get; set; }
+    [Column("blog_id")]
+    public int BlogId { get; set; }
+    
+    [Column("blog_title")]
+    public string BlogTitle { get; set; }
+    
+    [Column("blog_author")]
+    public string BlogAuthor { get; set; }
+    
+    [Column("blog_content")]
+    public string BlogContent { get; set; }
 }

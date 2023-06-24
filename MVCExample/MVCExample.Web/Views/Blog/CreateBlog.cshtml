@@ -1,8 +1,59 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model BlogRequestModel
 
 @{
     Layout = LayoutService.GetLayout();
-    ViewBag["Title"] = "Create Blog";
 }
 
+<section class="content-header"></section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 m-auto">
+                <div class="card ">
+                    <div class="card-header">
+                        <h3 class="card-title">Create Blog</h3>
+                    </div>
+                    <form asp-action="SaveBlog" method="post" asp-controller="Blog">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="Blog_Title">Title</label>
+                                <input type="text" class="form-control" asp-for="BlogTitle" placeholder="Enter Title">
+                                <span asp-validation-for="BlogTitle" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="Blog_Author">Author</label>
+                                <input type="text" class="form-control" asp-for="BlogAuthor" placeholder="Enter Author">
+                                <span asp-validation-for="BlogAuthor" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="Blog_Content">Content</label>
+                                <textarea class="form-control" asp-for="BlogContent" placeholder="Enter Content">
+                                </textarea>
+                                <span asp-validation-for="BlogContent" class="text-danger"></span>
+                            </div>
+                            <div class="from-group text-right">
+                                <a asp-action="Index" class="btn btn-flat btn-outline-danger mr-2">Cancel</a>
+                                <button type="submit" class="btn btn-outline-success btn-flat">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
 
+            </div>
+        </div>
+    </div>
+</section>
+
+@await Html.PartialAsync("Modals")
+
+@section Scripts{
+    <script>
+    
+    message = "@Html.Raw(TempData["Message"])"
+    if (message != ""){
+        $("#modal-message").html(message);
+        $("#message-modal").modal('show');
+    }
+    </script>
+}

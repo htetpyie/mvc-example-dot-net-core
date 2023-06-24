@@ -1,13 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using MVCExample.Web.EFDbContext;
+using MVCExample.Web.Features.Blog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(
     opt =>
-        opt.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
+        opt.UseSqlServer(
+            builder
+                .Configuration
+                .GetConnectionString("DbConnection")
+        )
+);
+builder.Services.AddScoped<IBlogService,BlogService>();
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+builder.Services.AddControllersWithViews();
+
 
 var app = builder.Build();
 
@@ -28,6 +37,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Blog}/{action=Index}/{id?}");
 
 app.Run();

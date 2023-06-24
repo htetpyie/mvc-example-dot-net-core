@@ -11,9 +11,10 @@ public static class ChangeModel
         
         var data = new BlogDataModel()
         {
-            Blog_Title = model.Blog_Title,
-            Blog_Author = model.Blog_Author,
-            Blog_Content = model.Blog_Content
+            BlogId = model.BlogId,
+            BlogTitle = model.BlogTitle,
+            BlogAuthor = model.BlogAuthor,
+            BlogContent = model.BlogContent
         };
 
         return data;
@@ -25,10 +26,10 @@ public static class ChangeModel
         
         var model = new BlogRequestModel()
         {
-            Blog_Id = data.Blog_Id,
-            Blog_Title = data.Blog_Title,
-            Blog_Author = data.Blog_Author,
-            Blog_Content = data.Blog_Content
+            BlogId = data.BlogId,
+            BlogTitle = data.BlogTitle,
+            BlogAuthor = data.BlogAuthor,
+            BlogContent = data.BlogContent
         };
 
         return model;

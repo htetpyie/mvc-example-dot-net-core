@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
+using MVCExample.Web.Features.Base;
+using MVCExample.Web.Features.DataTable;
 
 namespace MVCExample.Web.Features.Blog;
 
-public class BlogController : Controller
+public partial class BlogController : BaseController
 {
     private readonly IBlogService _iBlogService;
-    
+
     public BlogController(IBlogService iBlogService)
     {
         _iBlogService = iBlogService;
@@ -16,12 +18,19 @@ public class BlogController : Controller
         return View();
     }
 
-    public IActionResult GetBlogList()
+    [HttpPost]
+    public async Task<IActionResult> GetBlogList()
     {
-        return Json("");
+        BlogListRequestModel request = new BlogListRequestModel();
+        DataTableRequest requestFromDataTable = GetDataTableRequest();
+        request.DataTableRequest = requestFromDataTable;
+
+        var response = await _iBlogService.GetList(request);
+
+        return Ok(response);
     }
 
-    public IActionResult CreateBlog( BlogRequestModel model)
+    public IActionResult CreateBlog(BlogRequestModel model)
     {
         return View(model);
     }
@@ -39,28 +48,35 @@ public class BlogController : Controller
 
             BlogDataModel data = model.Change();
 
+            if (await _iBlogService.IsDuplicate(data))
+            {
+                TempData["Message"] = "Error! Blog is already created !";
+                return RedirectToAction(nameof(CreateBlog), model);
+            }
+
             int result = await _iBlogService.CreateBlog(data);
             message = result > 0
-                ? "Blog is created successfully!"
+                ? "Blog is created successfully !"
                 : "Create Error";
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            message = "Something went wrong! Please try again later.";
+            message = "Something went wrong ! Please try again later.";
         }
 
         TempData["Message"] = message;
         return RedirectToAction(nameof(Index));
     }
-    
+
     public async Task<IActionResult> EditBlog(string id)
     {
-        string message = string.Empty;
+        BlogRequestModel model = new BlogRequestModel();
+
         try
         {
             bool isInt = int.TryParse(id, out int blogId);
-            
+
             if (!isInt)
             {
                 TempData["Message"] = "404 Not Found.";
@@ -68,16 +84,15 @@ public class BlogController : Controller
             }
 
             var data = await _iBlogService.GetById(blogId);
-            BlogRequestModel model = data.Change();
-
+            model = data.Change();
         }
         catch (Exception e)
         {
-            message = "Something went wrong! Please try again later.";
+            TempData["Message"] = "Something went wrong! Please try again later.";
+            return RedirectToAction(nameof(Index));
         }
 
-        TempData["Message"] = message;
-        return View();
+        return View(model);
     }
 
     [HttpPost]
@@ -88,12 +103,18 @@ public class BlogController : Controller
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(EditBlog), model.Blog_Id);
+                return RedirectToAction(nameof(EditBlog), model.BlogId);
             }
-
+            
             BlogDataModel data = model.Change();
 
-            int result = await _iBlogService.UpdateBlog(model.Blog_Id, data);
+            if (await _iBlogService.IsDuplicate(data))
+            {
+                TempData["Message"] = "Error! Blog is already created !";
+                return View("EditBlog", model);
+            }
+
+            int result = await _iBlogService.UpdateBlog(model.BlogId, data);
             message = result > 0
                 ? "Blog is updated successfully!"
                 : "Update Error";
@@ -122,7 +143,9 @@ public class BlogController : Controller
             }
 
             int result = await _iBlogService.DeleteBlog(blogId);
-
+            message = result > 0
+                ? "Blog is deleted successfylly !"
+                : "Blog deletion error !";
         }
         catch (Exception e)
         {

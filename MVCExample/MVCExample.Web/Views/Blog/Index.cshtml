@@ -1,18 +1,114 @@
-@model TModel
-
 @{
-    Layout = null;
+    Layout = LayoutService.GetLayout();
+    //If you want to add
+    //ViewData["Title"] = "Blog"; 
 }
+<section class="content-header"></section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <a asp-action="CreateBlog" class="btn btn-outline-success  btn-flat">
+                            <h3 class="card-title">Create</h3>
+                        </a>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="blog-table" class="table table-bordered table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th style="width: 20%">Title</th>
+                                <th style="width: 20%">Author</th>
+                                <th style="width: 40%">Content</th>
+                                <th class="text-center" style="width: 10%">Edit</th>
+                                <th class="text-center" style="width: 10%">Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                           
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+</section>
+@await Html.PartialAsync("Modals")
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
-</div>
-</body>
-</html>
+@section Scripts{
+    <script>
+    
+    message = "@Html.Raw(TempData["Message"])"
+    if (message != ""){
+        $("#modal-message").html(message);
+        $("#message-modal").modal('show');
+    }
+    
+    $(document).ready(()=>{
+        drawTable();
+    })
+    
+    function drawTable(){
+         $('#blog-table').DataTable({
+              "paging": true,
+              "destroyed": true,
+              "searching": true,
+              "ordering": true,
+              "info": true,
+              "autoWidth": false,
+              "responsive": true,
+              "serverSide": true,
+               "ajax": {
+                  "url": "/Blog/GetBlogList/",
+                  "type": "POST",
+                  "datatype": "json"
+              },
+              "columnDefs": [{
+                  "targets": [3,4],
+                  "searchable": false,
+                  "orderable": false
+              }],
+               "columns": [
+                  { "data": "blogTitle", "name": "Blog Title", "autoWidth": true },
+                  { "data": "blogAuthor", "name": "Blog Author", "autoWidth": true },
+                  { "data": "blogContent", "name": "Blog Content", "autoWidth": true },
+                  { 
+                      "data": "blogId",
+                      "render": function (data) { 
+                          return `<a href='/Blog/EditBlog/${data}' class='btn btn-sm btn-outline-info'>
+                                       <i class="fas fa-pen-square"></i>
+                                  </a>`;   
+                      },
+                      "className" : "text-center"
+                  },
+                  {
+                      "data": "blogId",
+                      "render": function (data) { 
+                          return `<a href='javascript:void(0)' onclick="clickDeleteBtn(${data})" class='btn btn-sm btn-outline-danger'>
+                                      <i class="fas fa-trash-alt"></i>
+                                   </a>`;   
+                      },
+                      "className" : "text-center"
+                  },
+               ]
+        });
+    }
+    
+    function clickDeleteBtn(id){
+         $('#delete-form #delete-id').val(id);
+         $("#delete-modal").modal('show');
+    }
+    
+    $("#btn-delete-form").on("click",() =>{
+        $("#delete-form").submit();
+    })
+    
+    </script>
+}

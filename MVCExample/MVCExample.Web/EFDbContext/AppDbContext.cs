@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using MVCExample.Web.Features;
 using MVCExample.Web.Features.Blog;
 
 namespace MVCExample.Web.EFDbContext;
