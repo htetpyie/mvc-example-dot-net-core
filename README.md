@@ -36,7 +36,7 @@ CREATE TABLE [dbo].[tbl_blog](
 ```
 
 ### Refrences
-* [Admin Lte Template](https://adminlte.io/themes/v3/)
+* [AdminLte Template](https://adminlte.io/themes/v3/)
 * [JQuery DataTable In ASP Net Core](https://codewithmukesh.com/blog/jquery-datatable-in-aspnet-core/)
 * [Model Validation](https://learn.microsoft.com/en-us/aspnet/core/mvc/models/validation?view=aspnetcore-6.0)
 
