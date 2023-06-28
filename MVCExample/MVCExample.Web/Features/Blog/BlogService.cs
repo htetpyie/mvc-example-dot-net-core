@@ -144,7 +144,7 @@ public class BlogService : IBlogService
 
             blog.IsDelete = true;
             blog.ModifiedDate = DateTime.Now; //Need deleted user
-            _context.Entry(blog).State = EntityState.Deleted;
+            _context.Entry(blog).State = EntityState.Modified;
 
             result = await _context.SaveChangesAsync();
         }
