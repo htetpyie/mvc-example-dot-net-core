@@ -937,4 +937,20 @@
     <_ContentIncludedByDefault Remove="wwwroot\theme\plugins\popper\umd\popper.min.js.map" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="obj\**" />
+  </ItemGroup>
+
 </Project>
