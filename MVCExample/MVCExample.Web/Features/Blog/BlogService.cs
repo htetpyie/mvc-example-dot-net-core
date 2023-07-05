@@ -3,6 +3,7 @@ using MVCExample.Web.EFDbContext;
 using MVCExample.Web.Features.DataTable;
 
 namespace MVCExample.Web.Features.Blog;
+
 public class BlogService : IBlogService
 {
     private readonly AppDbContext _context;
@@ -90,7 +91,7 @@ public class BlogService : IBlogService
         }
         catch (Exception e)
         {
-            Console.WriteLine(e); //User Logger in Enterprise
+            Console.WriteLine(e); //Use Logger in Enterprise
             throw;
         }
 

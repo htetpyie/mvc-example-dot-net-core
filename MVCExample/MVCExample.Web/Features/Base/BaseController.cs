@@ -5,7 +5,7 @@ namespace MVCExample.Web.Features.Base;
 
 public class BaseController : Controller
 {
-    public DataTableRequest GetDataTableRequest()
+    protected DataTableRequest GetDataTableRequest()
     {
         DataTableRequest request = new DataTableRequest();
         try
@@ -13,7 +13,8 @@ public class BaseController : Controller
             var draw = Request.Form["draw"].FirstOrDefault();
             var start = Request.Form["start"].FirstOrDefault();
             var length = Request.Form["length"].FirstOrDefault();
-            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"]
+                .FirstOrDefault();
             var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
             var searchValue = Request.Form["search[value]"].FirstOrDefault();
             int pageSize = length != null ? Convert.ToInt32(length) : 0;
@@ -38,5 +39,4 @@ public class BaseController : Controller
 
         return request;
     }
-    
 }
